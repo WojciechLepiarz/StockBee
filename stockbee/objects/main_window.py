@@ -1,5 +1,6 @@
 import requests
 import zipfile
+import pathlib
 import pandas as pd
 from PySide2.QtCore import Slot, qApp
 from PySide2.QtGui import QKeySequence
@@ -9,7 +10,7 @@ from PySide2.QtWidgets import QMainWindow, QAction
 class MainWindow(QMainWindow):
     def __init__(self, widget):
         QMainWindow.__init__(self)
-        self.setWindowTitle("Eartquakes information")
+        self.setWindowTitle("StockBee")
         self.setCentralWidget(widget)
 
         # Setup links
@@ -43,13 +44,32 @@ class MainWindow(QMainWindow):
                           int(geometry.height() * 0.7))
 
     def get_partial_data(self) -> None:
-        myfile = requests.get(self.partial_link)
-        with open('last_data.zip', 'wb') as ff:
-            ff.write(myfile.content)
+        # TODO: Delete below condition and always download after dev finished
+        if not pathlib.Path('last_data.zip').exists():
+            myfile = requests.get(self.partial_link)
+            with open('last_data.zip', 'wb') as ff:
+                ff.write(myfile.content)
+        my_dir = pathlib.Path('temp_dir')
+        if my_dir.exists():
+            filelist = my_dir.glob('*')
+            for ii in filelist:
+                ii.unlink()
+            my_dir.rmdir()
+        my_dir.mkdir()
+        with zipfile.ZipFile("last_data.zip", "r") as zip_ref:
+            zip_ref.extractall(my_dir)
         self.status.showMessage("I got latest data for you!")
 
     def get_full_data(self) -> None:
-        myfile = requests.get(self.full_link)
-        with open('full_data.zip', 'wb') as ff:
-            ff.write(myfile.content)
+        # TODO: Delete below condition and always download after dev finished
+        if not pathlib.Path('full_data.zip').exists():
+            myfile = requests.get(self.full_link)
+            with open('full_data.zip', 'wb') as ff:
+                ff.write(myfile.content)
+        my_dir = pathlib.Path('stock_data')
+        if my_dir.exists():
+            return
+        my_dir.mkdir()
+        with zipfile.ZipFile("full_data.zip", "r") as zip_ref:
+            zip_ref.extractall(my_dir)
         self.status.showMessage("I got full data for you!")
