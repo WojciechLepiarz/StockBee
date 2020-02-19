@@ -5,14 +5,16 @@ from PySide2.QtGui import QColor
 class CustomTableModel(QAbstractTableModel):
     def __init__(self, data=None):
         QAbstractTableModel.__init__(self)
-        self.load_data(data)
 
-    def load_data(self, data):
-        self.input_dates = data[0].values
-        self.input_magnitudes = data[1].values
+        self.dates = data["<DTYYYYMMDD>"].values
+        self.open = data["<OPEN>"].values
+        self.high = data["<HIGH>"].values
+        self.low = data["<LOW>"].values
+        self.close = data["<CLOSE>"].values
+        self.volume = data["<VOL>"].values
 
-        self.column_count = 2
-        self.row_count = len(self.input_magnitudes)
+        self.column_count = 6
+        self.row_count = len(self.close)
 
     def rowCount(self, parent=QModelIndex()):
         return self.row_count
@@ -24,7 +26,7 @@ class CustomTableModel(QAbstractTableModel):
         if role != Qt.DisplayRole:
             return None
         if orientation == Qt.Horizontal:
-            return ("Date", "Magnitude")[section]
+            return ("Date", "Open", "High", "Low", "Close", "Volume")[section]
         else:
             return "{}".format(section)
 
@@ -34,11 +36,17 @@ class CustomTableModel(QAbstractTableModel):
 
         if role == Qt.DisplayRole:
             if column == 0:
-                raw_date = self.input_dates[row]
-                date = "{}".format(raw_date.toPython())
-                return date[:-3]
+                return "{:d}".format(int(self.dates[row]))
             elif column == 1:
-                return "{:.2f}".format(self.input_magnitudes[row])
+                return "{:.2f}".format(self.open[row])
+            elif column == 2:
+                return "{:.2f}".format(self.high[row])
+            elif column == 3:
+                return "{:.2f}".format(self.low[row])
+            elif column == 4:
+                return "{:.2f}".format(self.close[row])
+            elif column == 5:
+                return "{:d}".format(int(self.volume[row]))
         elif role == Qt.BackgroundRole:
             return QColor(Qt.white)
         elif role == Qt.TextAlignmentRole:

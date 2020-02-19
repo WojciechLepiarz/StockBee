@@ -22,7 +22,6 @@ class MainWindow(QMainWindow):
         self.menu = self.menuBar()
         self.file_menu = self.menu.addMenu("File")
 
-        # Exit QAction
         get_partial_data_action = QAction("Get latest date", self)
         get_partial_data_action.triggered.connect(self.get_partial_data)
         get_full_data_action = QAction("Get all available data", self)
