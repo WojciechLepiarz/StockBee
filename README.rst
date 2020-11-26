@@ -16,7 +16,7 @@ StockBee
 
 
 
-Analysis tool to analyze stock data
+Analysis tool to analyze stock data, especially on Warsaw Stock Exchange
 
 
 * Free software: MIT license

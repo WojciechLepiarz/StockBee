@@ -12,7 +12,7 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [ ]
 
-setup_requirements = ['pytest-runner', ]
+setup_requirements = ['pytest-runner', 'numpy==1.19.3', 'pandas', 'bokeh', 'requests', ]
 
 test_requirements = ['pytest>=3', ]
 
