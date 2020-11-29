@@ -10,9 +10,9 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = [ ]
+requirements = ['numpy==1.19.3', 'pandas', 'bokeh', 'requests', 'pandas-bokeh', ]
 
-setup_requirements = ['pytest-runner', 'numpy==1.19.3', 'pandas', 'bokeh', 'requests', ]
+setup_requirements = ['pytest-runner', 'numpy==1.19.3', 'pandas', 'bokeh', 'requests', 'pandas-bokeh', ]
 
 test_requirements = ['pytest>=3', ]
 

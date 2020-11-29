@@ -1,4 +1,3 @@
-"""Main module."""
 import numpy as np
 import glob
 import pandas as pd
@@ -7,22 +6,22 @@ from bokeh.models import HoverTool
 from math import pi
 from bokeh.io import output_notebook
 
-def plot_candlestick(in_df: pd.DataFrame, date: str, ma1: int = 0, ma2: int = 0, sp: int = 10) -> None:
-    df = in_df.copy()
+def plot_candlestick(inputDf: pd.DataFrame, dateStart: str, ma1Period: int = 0, ma2Period: int = 0, stochPeriod: int = 10) -> None:
+    df = inputDf.copy()
     w = 12*60*60*1000 # half day in ms
-    if ma1 > 0:
-        df['MA_'+str(ma1)] = df["<CLOSE>"].rolling(ma1).mean()
-    if ma2 > 0:
-        df['MA_'+str(ma2)] = df["<CLOSE>"].rolling(ma2).mean()
+    if ma1Period > 0:
+        df['MA_'+str(ma1Period)] = df["<CLOSE>"].rolling(ma1Period).mean()
+    if ma2Period > 0:
+        df['MA_'+str(ma2Period)] = df["<CLOSE>"].rolling(ma2Period).mean()
     
-    df = df.loc[df.index >= date]
+    df = df.loc[df.index >= dateStart]
     inc = df["<CLOSE>"] > df["<OPEN>"]
     dec = df["<OPEN>"] > df["<CLOSE>"]
     TOOLS = "crosshair,pan,wheel_zoom,box_zoom,reset,save"
 
     df["%K"] = (100 
-                * (df["<CLOSE>"] - df["<CLOSE>"].rolling(sp).min()) 
-                / (df["<CLOSE>"].rolling(sp).max() - df["<CLOSE>"].rolling(sp).min()))
+                * (df["<CLOSE>"] - df["<CLOSE>"].rolling(stochPeriod).min()) 
+                / (df["<CLOSE>"].rolling(stochPeriod).max() - df["<CLOSE>"].rolling(stochPeriod).min()))
     df["%D"] = df["%K"].rolling(3).mean()
     df["%D-slow"] = df["%D"].rolling(2).mean()
     
@@ -49,10 +48,10 @@ def plot_candlestick(in_df: pd.DataFrame, date: str, ma1: int = 0, ma2: int = 0,
     pp.vbar(df.index[inc], w, df["<OPEN>"][inc], df["<CLOSE>"][inc], fill_color="#D5E1DD", line_color="black")
     pp.vbar(df.index[dec], w, df["<OPEN>"][dec], df["<CLOSE>"][dec], fill_color="#F2583E", line_color="black")
     pp.add_tools(HoverTool(tooltips=[( 'price',  '$y')]))
-    if ma1 > 0:
-        pp.line(df.index, df['MA_'+str(ma1)], color="blue")
-    if ma2 > 0:
-        pp.line(df.index, df['MA_'+str(ma2)], color="red")
+    if ma1Period > 0:
+        pp.line(df.index, df['MA_'+str(ma1Period)], color="blue")
+    if ma2Period > 0:
+        pp.line(df.index, df['MA_'+str(ma2Period)], color="red")
     ppv.vbar(df.index, w, 0, df["<VOL>"], fill_color="#F2583E", line_color="black")
     
     ppstoch.line(df.index, df['%D'], color="red")
@@ -62,10 +61,10 @@ def plot_candlestick(in_df: pd.DataFrame, date: str, ma1: int = 0, ma2: int = 0,
     
     show(gg)  # open a browser
 
-def plot_change_range(in_df: pd.DataFrame, date: str) -> pd.DataFrame:
-    df = in_df.copy()
+def plot_change_range(inputDataframe: pd.DataFrame, dateStart: str) -> pd.DataFrame:
+    df = inputDataframe.copy()
     w = 12*60*60*1000 # half day in ms
-    df = df.loc[df.index >= date]
+    df = df.loc[df.index >= dateStart]
     df["Change"] = (df["<CLOSE>"] / df["<CLOSE>"].shift(1)) * 100 - 100
     df["Range"] = (df["<HIGH>"] - df["<LOW>"]) / df["<CLOSE>"] * 100 
     inc = df["Change"] >= 0
