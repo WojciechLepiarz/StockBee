@@ -4,8 +4,7 @@
 
 import pytest
 
-
-from stockbee import stockbee
+from stockbee.plots import plot_candlestick
 
 
 @pytest.fixture
