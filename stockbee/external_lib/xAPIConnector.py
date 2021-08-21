@@ -10,8 +10,11 @@ DEBUG = True
 
 #default connection properites
 DEFAULT_XAPI_ADDRESS        = 'xapi.xtb.com'
-DEFAULT_XAPI_PORT           = 5124
-DEFUALT_XAPI_STREAMING_PORT = 5125
+# DEFAULT_XAPI_PORT           = 5124    # Demo account port
+# DEFUALT_XAPI_STREAMING_PORT = 5125    # Demo account port
+DEFAULT_XAPI_PORT           = 5112      # Real account port
+DEFUALT_XAPI_STREAMING_PORT = 5113      # Real account port
+
 
 # wrapper name and version
 WRAPPER_NAME    = 'python'
