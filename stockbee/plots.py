@@ -6,7 +6,8 @@ from bokeh.models import HoverTool
 from math import pi
 from bokeh.io import output_notebook
 
-def plot_candlestick(inputDf: pd.DataFrame, dateStart: str, ma1Period: int = 0, ma2Period: int = 0, stochPeriod: int = 10) -> None:
+def plot_candlestick(inputDf: pd.DataFrame, dateStart: str = "19000101", ma1Period: int = 0, ma2Period: int = 0, 
+                     stochPeriod: int = 10) -> None:
     df = inputDf.copy()
     w = 12*60*60*1000 # half day in ms
     if ma1Period > 0:
@@ -26,8 +27,10 @@ def plot_candlestick(inputDf: pd.DataFrame, dateStart: str, ma1Period: int = 0, 
     df["%D-slow"] = df["%D"].rolling(2).mean()
     
     pp = figure(x_axis_type="datetime", tools=TOOLS, plot_width=1000, title = df["<TICKER>"].values[0])
-    ppv = figure(x_axis_type="datetime", x_range=pp.x_range, tools=TOOLS, plot_width=1000, plot_height=200, title="VOLUME")
-    ppstoch = figure(x_axis_type="datetime", x_range=pp.x_range, tools=TOOLS, plot_width=1000, plot_height=200, title="STOCH")
+    ppv = figure(x_axis_type="datetime", x_range=pp.x_range, tools=TOOLS, 
+                 plot_width=1000, plot_height=200, title="VOLUME")
+    ppstoch = figure(x_axis_type="datetime", x_range=pp.x_range, tools=TOOLS, 
+                     plot_width=1000, plot_height=200, title="STOCH")
     
     pp.xaxis.major_label_orientation = pi/4
     pp.xaxis.ticker.desired_num_ticks = 60
@@ -71,9 +74,12 @@ def plot_change_range(inputDataframe: pd.DataFrame, dateStart: str) -> pd.DataFr
     dec = df["Change"] < 0
     TOOLS = "crosshair,pan,wheel_zoom,box_zoom,reset,save"
 
-    pp = figure(x_axis_type="datetime", tools=TOOLS, plot_width=1000, plot_height=400, title = df["<TICKER>"].values[0] + " Close change vs. t-1 [%]")
-    ppv = figure(x_axis_type="datetime", x_range=pp.x_range, tools=TOOLS, plot_width=1000, plot_height=200, title="VOLUME")
-    ppx = figure(x_axis_type="datetime", tools=TOOLS, plot_width=1000, plot_height=300, title = df["<TICKER>"].values[0] + " (Low-High range) / Close [%]")
+    pp = figure(x_axis_type="datetime", tools=TOOLS, plot_width=1000, plot_height=400, 
+                title = df["<TICKER>"].values[0] + " Close change vs. t-1 [%]")
+    ppv = figure(x_axis_type="datetime", x_range=pp.x_range, tools=TOOLS, plot_width=1000, 
+                 plot_height=200, title="VOLUME")
+    ppx = figure(x_axis_type="datetime", tools=TOOLS, plot_width=1000, plot_height=300, 
+                 title = df["<TICKER>"].values[0] + " (Low-High range) / Close [%]")
     pp.xaxis.major_label_orientation = pi/4
     pp.xaxis.ticker.desired_num_ticks = 60
     pp.yaxis.ticker.desired_num_ticks = 5
