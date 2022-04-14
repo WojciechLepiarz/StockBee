@@ -2,8 +2,8 @@
 
 import pandas as pd
 import pytest
-
 from stockbee.detectors import pinbar_detector
+
 
 defaultPinBuyLabel = "PIN_Buy"
 defaultPinSellLabel = "PIN_Sell"
@@ -14,6 +14,7 @@ def dataframe_with_test_data():
     inputDataFrame.index = pd.to_datetime(inputDataFrame.index, format="%Y%m%d")
     return inputDataFrame
     
+
 def test_if_pinbar_detector_inputs_and_outputs_dataframe():
     dataframe_out = pd.DataFrame([])
     assert type(pinbar_detector(dataframe_out)) is pd.DataFrame
@@ -39,6 +40,8 @@ def test_if_any_spare_columns_remain(dataframe_with_test_data):
     inputDataFrame = pinbar_detector(dataframe_with_test_data)
     assert len(inputDataFrame.columns) == 10
 
-def test_pinbar_buy_detection(dataframe_with_test_data):
+def test_pinbar_buy_sell_detection(dataframe_with_test_data):
     inputDataFrame = pinbar_detector(dataframe_with_test_data)
+    inputDataFrame = inputDataFrame.astype({"PINB_GT": int, "PINS_GT": int}, errors='raise') 
     assert inputDataFrame[defaultPinBuyLabel].equals(inputDataFrame["PINB_GT"])
+    assert inputDataFrame[defaultPinSellLabel].equals(inputDataFrame["PINS_GT"])

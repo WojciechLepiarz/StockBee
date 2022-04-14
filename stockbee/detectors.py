@@ -12,9 +12,16 @@ def pinbar_detector(data: pd.DataFrame,
     data[labelPinBuy] = np.zeros((len(data.index), 1), dtype=np.int)
     data[labelPinSell] = np.zeros((len(data.index), 1), dtype=np.int)
     tempColumns = []
-    data, newColumns = calculate_body_and_tails(data)
+    data, newColumns = calculate_body_and_tails(data, labelOpen, labelHigh, labelLow, labelClose)
     tempColumns += newColumns
-    # calculate tails
-    # set flags
+    if(newColumns):
+        data.loc[
+            ((data["tailDown"] > 3*data["body"].abs()) & (data["tailUp"] < 0.5*data["tailDown"])),
+            labelPinBuy
+        ] = 1
+        data.loc[
+            ((data["tailUp"] > 3*data["body"].abs()) & (data["tailDown"] < 0.5*data["tailUp"])),
+            labelPinSell
+        ] = 1
     data = data.drop(tempColumns, axis=1, errors='ignore')
     return data
