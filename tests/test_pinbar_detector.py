@@ -13,7 +13,13 @@ def dataframe_with_test_data():
     inputDataFrame = pd.read_csv(".\\tests\\test_data\\test_stock_data.mst", index_col=1)
     inputDataFrame.index = pd.to_datetime(inputDataFrame.index, format="%Y%m%d")
     return inputDataFrame
-    
+
+@pytest.fixture
+def empty_dataframe():
+    basic_columns = ["<TICKER>", "<DTYYYYMMDD>", "<OPEN>", "<HIGH>",
+                     "<LOW>", "<CLOSE>", "<VOL>"]
+    return pd.DataFrame([], columns=basic_columns)
+
 
 def test_if_pinbar_detector_inputs_and_outputs_dataframe():
     dataframe_out = pd.DataFrame([])
@@ -25,7 +31,7 @@ def test_if_pinbar_detector_returns_dataframe_with_column_pinbar_added():
     assert defaultPinSellLabel in dataframe_out.columns
 
 def test_custom_pinbar_labels():
-    dataframe_out = pinbar_detector(pd.DataFrame([]), labelPinBuy="BuyPin", labelPinSell="SellPin")
+    dataframe_out = pinbar_detector(pd.DataFrame([]), labelBuy="BuyPin", labelSell="SellPin")
     assert "BuyPin" in dataframe_out.columns
     assert "SellPin" in dataframe_out.columns
 
@@ -36,9 +42,9 @@ def test_if_pinbar_column_is_0s_and_1s(dataframe_with_test_data):
     assert inputDataFrame[defaultPinBuyLabel].sum() == 0
     assert inputDataFrame[defaultPinSellLabel].sum() == 0
 
-def test_if_any_spare_columns_remain(dataframe_with_test_data):
-    inputDataFrame = pinbar_detector(dataframe_with_test_data)
-    assert len(inputDataFrame.columns) == 10
+def test_if_any_spare_columns_remain(empty_dataframe):
+    inputDataFrame = pinbar_detector(empty_dataframe)
+    assert len(inputDataFrame.columns) == 9
 
 def test_pinbar_buy_sell_detection(dataframe_with_test_data):
     inputDataFrame = pinbar_detector(dataframe_with_test_data)

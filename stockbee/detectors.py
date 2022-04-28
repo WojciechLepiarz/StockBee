@@ -5,7 +5,7 @@ from stockbee.internal_functions import calculate_body_and_tails
 
 
 def pinbar_detector(data: pd.DataFrame, 
-                    labelPinBuy: str="PIN_Buy", labelPinSell: str="PIN_Sell", 
+                    labelBuy: str="PIN_Buy", labelSell: str="PIN_Sell", 
                     labelOpen: str="<OPEN>", labelHigh: str="<HIGH>", 
                     labelLow: str="<LOW>", labelClose: str="<CLOSE>") -> pd.DataFrame:
     """
@@ -15,8 +15,8 @@ def pinbar_detector(data: pd.DataFrame,
 
     Args:
         data (pd.DataFrame): input dataframe
-        labelPinBuy (str, optional): label used for pin buy signal column. Defaults to "PIN_Buy".
-        labelPinSell (str, optional): label used for pin sell signal column. Defaults to "PIN_Sell".
+        labelBuy (str, optional): label used for pin buy signal column. Defaults to "PIN_Buy".
+        labelSell (str, optional): label used for pin sell signal column. Defaults to "PIN_Sell".
         labelOpen (str, optional): Open price label in input dataframe. Defaults to "<OPEN>".
         labelHigh (str, optional): High price label in input dataframe. Defaults to "<HIGH>".
         labelLow (str, optional): Low price label in input dataframe. Defaults to "<LOW>".
@@ -25,24 +25,27 @@ def pinbar_detector(data: pd.DataFrame,
     Returns:
         pd.DataFrame: Input dataframe with added columns for detected signals.
     """
-    data[labelPinBuy] = np.zeros((len(data.index), 1), dtype=np.int)
-    data[labelPinSell] = np.zeros((len(data.index), 1), dtype=np.int)
+    data[labelBuy] = np.zeros((len(data.index), 1), dtype=np.int)
+    data[labelSell] = np.zeros((len(data.index), 1), dtype=np.int)
     tempColumns = []
     data, newColumns = calculate_body_and_tails(data, labelOpen, labelHigh, labelLow, labelClose)
     tempColumns += newColumns
     if(newColumns):
         data.loc[
             ((data["tailDown"] > 3*data["body"].abs()) & (data["tailUp"] < 0.5*data["tailDown"])),
-            labelPinBuy
+            labelBuy
         ] = 1
         data.loc[
             ((data["tailUp"] > 3*data["body"].abs()) & (data["tailDown"] < 0.5*data["tailUp"])),
-            labelPinSell
+            labelSell
         ] = 1
     data = data.drop(tempColumns, axis=1, errors='ignore')
     return data
 
-
-def fakey_detector() -> pd.DataFrame:
-    data = pd.DataFrame()
+def fakey_detector(data: pd.DataFrame, 
+                   labelBuy: str="Fakey_Buy", labelSell: str="Fakey_Sell",
+                   labelOpen: str="<OPEN>", labelHigh: str="<HIGH>", 
+                   labelLow: str="<LOW>", labelClose: str="<CLOSE>") -> pd.DataFrame:
+    data[labelBuy] = np.zeros((len(data.index), 1), dtype=np.int)
+    data[labelSell] = np.zeros((len(data.index), 1), dtype=np.int)
     return data

@@ -115,3 +115,4 @@ ENV/
 # IDE settings
 .vscode/
 examples/scripts/login_data.py
+test.xlsx
