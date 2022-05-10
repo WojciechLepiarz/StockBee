@@ -27,10 +27,8 @@ def pinbar_detector(data: pd.DataFrame,
     """
     data[labelBuy] = np.zeros((len(data.index), 1), dtype=np.int)
     data[labelSell] = np.zeros((len(data.index), 1), dtype=np.int)
-    tempColumns = []
-    data, newColumns = calculate_body_and_tails(data, labelOpen, labelHigh, labelLow, labelClose)
-    tempColumns += newColumns
-    if(newColumns):
+    data, tempColumns = calculate_body_and_tails(data, labelOpen, labelHigh, labelLow, labelClose)
+    if(tempColumns):
         data.loc[
             ((data["tailDown"] > 3*data["body"].abs()) & (data["tailUp"] < 0.5*data["tailDown"])),
             labelBuy
@@ -48,4 +46,24 @@ def fakey_detector(data: pd.DataFrame,
                    labelLow: str="<LOW>", labelClose: str="<CLOSE>") -> pd.DataFrame:
     data[labelBuy] = np.zeros((len(data.index), 1), dtype=np.int)
     data[labelSell] = np.zeros((len(data.index), 1), dtype=np.int)
+    data, tempColumns = calculate_body_and_tails(data, labelOpen, labelHigh, labelLow, labelClose)
+    if(tempColumns):
+        data["body-1"] = data["body"].shift(1, fill_value=0)
+        data["close-1"] = data[labelClose].shift(1, fill_value=0)
+        tempColumns += ["body-1", "close-1"]
+        data.loc[
+            ((data["body-1"] > 0) 
+             & (data[labelHigh] > data["close-1"]+data["body-1"].abs()*0.25) 
+             & (data[labelOpen] < data["close-1"]) 
+             & (data[labelClose] < data["close-1"])),
+            labelBuy
+        ] = 1
+        data.loc[
+            ((data["body-1"] < 0) 
+             & (data[labelLow] < data["close-1"]-data["body-1"].abs()*0.25) 
+             & (data[labelOpen] > data["close-1"]) 
+             & (data[labelClose] > data["close-1"])),
+            labelSell
+        ] = 1
+    data = data.drop(tempColumns, axis=1, errors='ignore')
     return data
