@@ -116,3 +116,4 @@ ENV/
 .vscode/
 examples/scripts/login_data.py
 test.xlsx
+examples/scripts/plot_single_file.html
