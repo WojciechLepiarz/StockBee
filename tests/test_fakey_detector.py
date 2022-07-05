@@ -49,6 +49,5 @@ def test_if_any_spare_columns_remain(empty_dataframe):
 def test_pinbar_buy_sell_detection(dataframe_with_test_data):
     inputDataFrame = fakey_detector(dataframe_with_test_data)
     inputDataFrame = inputDataFrame.astype({"FAKEYB_GT": int, "FAKEYS_GT": int}, errors='raise') 
-    inputDataFrame.to_excel('test_dump.xlsx')
     assert inputDataFrame[defaultFakeyBuyLabel].equals(inputDataFrame["FAKEYB_GT"])
     assert inputDataFrame[defaultFakeySellLabel].equals(inputDataFrame["FAKEYS_GT"])

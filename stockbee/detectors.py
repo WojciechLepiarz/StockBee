@@ -24,8 +24,8 @@ def pinbar_detector(data: pd.DataFrame,
     Returns:
         pd.DataFrame: Input dataframe with added columns for detected signals.
     """
-    data[labelBuy] = np.zeros((len(data.index), 1), dtype=np.int)
-    data[labelSell] = np.zeros((len(data.index), 1), dtype=np.int)
+    data[labelBuy] = np.zeros((len(data.index), 1), dtype=int)
+    data[labelSell] = np.zeros((len(data.index), 1), dtype=int)
     data, tempColumns = calculate_body_and_tails(data, labelOpen, labelHigh, labelLow, labelClose)
     if(tempColumns):
         data.loc[
@@ -59,8 +59,8 @@ def fakey_detector(data: pd.DataFrame,
     Returns:
         pd.DataFrame: Input dataframe with added columns for detected signals.
     """
-    data[labelBuy] = np.zeros((len(data.index), 1), dtype=np.int)
-    data[labelSell] = np.zeros((len(data.index), 1), dtype=np.int)
+    data[labelBuy] = np.zeros((len(data.index), 1), dtype=int)
+    data[labelSell] = np.zeros((len(data.index), 1), dtype=int)
     data, tempColumns = calculate_body_and_tails(data, labelOpen, labelHigh, labelLow, labelClose)
     if(tempColumns):
         data["body-1"] = data["body"].shift(1, fill_value=0)
