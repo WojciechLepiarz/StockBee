@@ -30,6 +30,6 @@ def test_if_output_collects_close_data(dataframe_with_test_data):
     indices = dataframe_with_test_data.loc[dataframe_with_test_data["PINB_GT"]>=1.].index
     sum_of_entries = 0.
     for ii in indices:
-        sum_of_entries += dataframe_with_test_data.loc[ii:ii+10,"<CLOSE>"].sum()
+        sum_of_entries += dataframe_with_test_data.loc[ii:ii+9,"<CLOSE>"].sum()
     dataframe_with_test_data.set_index("<DTYYYYMMDD>", inplace=True)
     assert generated_output.values.sum() == sum_of_entries
