@@ -3,7 +3,7 @@ import numpy as np
 from stockbee.internal_functions import calculate_body_and_tails
 
 
-def pinbar_detector(data: pd.DataFrame, 
+def detect_pinbar(data: pd.DataFrame, 
                     labelBuy: str="PIN_Buy", labelSell: str="PIN_Sell", 
                     labelOpen: str="<OPEN>", labelHigh: str="<HIGH>", 
                     labelLow: str="<LOW>", labelClose: str="<CLOSE>") -> pd.DataFrame:
@@ -39,7 +39,7 @@ def pinbar_detector(data: pd.DataFrame,
     data = data.drop(tempColumns, axis=1, errors='ignore')
     return data
 
-def fakey_detector(data: pd.DataFrame, 
+def detect_fakey(data: pd.DataFrame, 
                    labelBuy: str="Fakey_Buy", labelSell: str="Fakey_Sell",
                    labelOpen: str="<OPEN>", labelHigh: str="<HIGH>", 
                    labelLow: str="<LOW>", labelClose: str="<CLOSE>") -> pd.DataFrame:
