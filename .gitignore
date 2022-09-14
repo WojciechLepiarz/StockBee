@@ -116,3 +116,6 @@ ENV/
 .vscode/
 examples/scripts/login_data.py
 test.xlsx
+tests/test_data/test_stock_data — kopia.csv
+examples/scripts/plot_single_file.html
+examples/scripts/de_data.xlsx

@@ -1,5 +1,6 @@
 import logging
 import datetime
+import pandas as pd
 from stockbee.external_lib.xAPIConnector import APIClient, loginCommand
 from login_data import userId, password
 
@@ -32,8 +33,8 @@ def main():
     # get ssId from login response
     ssid = loginResponse['streamSessionId']
     
-    date_start = int(datetime.datetime(year=2020, month=12, day=1).timestamp() * 1000)
-    date_end = int(datetime.datetime(year=2021, month=6, day=1).timestamp() * 1000)
+    date_start = int(datetime.datetime(year=2020, month=1, day=1).timestamp() * 1000)
+    date_end = int(datetime.datetime(year=2022, month=9, day=13).timestamp() * 1000)
 
     myCommand = {
         "command": "getChartRangeRequest",
@@ -49,7 +50,8 @@ def main():
     }
 
     de_data = client.execute(myCommand)
-  
+    de_data_df = pd.DataFrame(de_data['returnData']['rateInfos'])
+    de_data_df.to_excel('de_data.xlsx')
     # gracefully close RR socket
     client.disconnect()
     
