@@ -41,5 +41,4 @@ def test_if_tailUp_is_calculated(dataframe_with_test_data):
     dataframe_out = calculate_body_and_tails(dataframe_with_test_data)[0]
     dataframe_out.loc[dataframe_out["body"] > 0, "tailUpGT"] = dataframe_out["<HIGH>"]-dataframe_out["<CLOSE>"]
     dataframe_out.loc[dataframe_out["body"] <= 0, "tailUpGT"] = dataframe_out["<HIGH>"]-dataframe_out["<OPEN>"]
-    dataframe_out.to_excel("test.xlsx")
     assert dataframe_out["tailUp"].equals(dataframe_out["tailUpGT"])

@@ -2,7 +2,7 @@
 
 import pandas as pd
 import pytest
-from stockbee.detectors import pinbar_detector
+from stockbee.detectors import detect_pinbar
 
 
 defaultPinBuyLabel = "PIN_Buy"
@@ -23,31 +23,31 @@ def empty_dataframe():
 
 def test_if_pinbar_detector_inputs_and_outputs_dataframe():
     dataframe_out = pd.DataFrame([])
-    assert type(pinbar_detector(dataframe_out)) is pd.DataFrame
+    assert type(detect_pinbar(dataframe_out)) is pd.DataFrame
 
 def test_if_pinbar_detector_returns_dataframe_with_column_pinbar_added():
-    dataframe_out = pinbar_detector(pd.DataFrame([]))
+    dataframe_out = detect_pinbar(pd.DataFrame([]))
     assert defaultPinBuyLabel in dataframe_out.columns
     assert defaultPinSellLabel in dataframe_out.columns
 
 def test_custom_pinbar_labels():
-    dataframe_out = pinbar_detector(pd.DataFrame([]), labelBuy="BuyPin", labelSell="SellPin")
+    dataframe_out = detect_pinbar(pd.DataFrame([]), labelBuy="BuyPin", labelSell="SellPin")
     assert "BuyPin" in dataframe_out.columns
     assert "SellPin" in dataframe_out.columns
 
 def test_if_pinbar_column_is_0s_and_1s(dataframe_with_test_data):
-    inputDataFrame = pinbar_detector(dataframe_with_test_data)
+    inputDataFrame = detect_pinbar(dataframe_with_test_data)
     inputDataFrame.loc[inputDataFrame[defaultPinBuyLabel] == 1] = 0
     inputDataFrame.loc[inputDataFrame[defaultPinSellLabel] == 1] = 0
     assert inputDataFrame[defaultPinBuyLabel].sum() == 0
     assert inputDataFrame[defaultPinSellLabel].sum() == 0
 
 def test_if_any_spare_columns_remain(empty_dataframe):
-    inputDataFrame = pinbar_detector(empty_dataframe)
+    inputDataFrame = detect_pinbar(empty_dataframe)
     assert len(inputDataFrame.columns) == 9
 
 def test_pinbar_buy_sell_detection(dataframe_with_test_data):
-    inputDataFrame = pinbar_detector(dataframe_with_test_data)
+    inputDataFrame = detect_pinbar(dataframe_with_test_data)
     inputDataFrame = inputDataFrame.astype({"PINB_GT": int, "PINS_GT": int}, errors='raise') 
     assert inputDataFrame[defaultPinBuyLabel].equals(inputDataFrame["PINB_GT"])
     assert inputDataFrame[defaultPinSellLabel].equals(inputDataFrame["PINS_GT"])
